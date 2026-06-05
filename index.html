@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=393, initial-scale=1.0" />
+<title>Help! Ik verveel me! · Variant A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --rood: #F4521E;
+    --geel: #F9D616;
+    --blauw: #1FA6E0;
+    --groen: #F98FC0;
+    --paars: #F98FC0;
+    --cream: #F5F0E2;
+    --inkt: #141414;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Lato", system-ui, sans-serif;
+    color: var(--inkt);
+    min-height: 100vh;
+    background-color: var(--cream);
+    background-image: radial-gradient(rgba(20,20,20,0.06) 1.5px, transparent 1.6px);
+    background-size: 26px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Desktop: app in een telefoon-mockup, gecentreerd */
+  .stage { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 100vh; }
+  .phone {
+    position: relative;
+    background: #141414;
+    padding: 14px;
+    border-radius: 52px;
+    box-shadow: 0 34px 70px -24px rgba(20,20,20,0.5), 0 8px 24px -12px rgba(20,20,20,0.4);
+    transform-origin: center center;
+    will-change: transform;
+  }
+  /* zijknoppen */
+  .phone::before, .phone::after { content: ""; position: absolute; left: -3px; width: 4px; border-radius: 4px 0 0 4px; background: #0c0c0c; }
+  .phone::before { top: 150px; height: 54px; }
+  .phone::after  { top: 220px; height: 54px; }
+  .screen {
+    width: 393px; height: 852px;
+    border-radius: 40px; overflow: hidden;
+    position: relative; background: var(--cream);
+  }
+  .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 92px; height: 24px; background: #141414; border-radius: 99px; z-index: 60; pointer-events: none; }
+  #root { width: 393px; height: 852px; position: relative; overflow: hidden; }
+
+  /* Telefoon: edge-to-edge, geen bezel */
+  @media (max-width: 440px) {
+    body { background-image: none; }
+    .phone { padding: 0; border-radius: 0; box-shadow: none; transform: none !important; }
+    .phone::before, .phone::after { display: none; }
+    .screen { border-radius: 0; }
+    .island { display: none; }
+  }
+
+  /* Wiebelige basisanimaties */
+  @keyframes verveelWobble {
+    0%, 100% { transform: rotate(-2deg); }
+    50%      { transform: rotate(2deg); }
+  }
+  @keyframes pop {
+    0%   { transform: scale(0.6) rotate(-8deg); opacity: 0; }
+    60%  { transform: scale(1.08) rotate(2deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes drift {
+    0%, 100% { transform: translateY(0px) rotate(var(--r, 0deg)); }
+    50%      { transform: translateY(-8px) rotate(calc(var(--r, 0deg) + 6deg)); }
+  }
+  @keyframes bouncein {
+    0%   { transform: translateY(-30px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Display font helper */
+  .display { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; letter-spacing: -0.5px; }
+
+  /* Generieke chunky knop */
+  .chunk {
+    border: 4px solid var(--inkt);
+    border-radius: 22px;
+    box-shadow: 6px 6px 0 var(--inkt);
+    background: white;
+    transition: transform .14s ease, box-shadow .14s ease;
+    cursor: pointer;
+    user-select: none;
+  }
+  .chunk:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--inkt); }
+  .chunk:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--inkt); }
+
+  /* startscherm (gelijk aan Startpagina.html) */
+  @keyframes adem {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-5px); }
+  }
+  .cta-start { transition: transform .12s ease, box-shadow .12s ease; }
+  .cta-start:hover  { transform: translateY(-2px) !important; box-shadow: 0 9px 0 0 #141414 !important; }
+  .cta-start:active { transform: translateY(7px) !important;  box-shadow: 0 0 0 0 #141414 !important; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="phone">
+      <div class="screen">
+        <div class="island"></div>
+        <div id="root"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="ideas.js"></script>
+  <script src="sheet-data.js"></script>
+  <script type="text/babel" src="illustraties.jsx"></script>
+  <script type="text/babel" src="mascotte.jsx"></script>
+
+  <script type="text/babel">
+    const { useState, useMemo, useEffect } = React;
+    const C = window.PALETTE;
+    const Mascotte = window.Mascotte;
+
+    // ── Eigen uploads (uit het upload-bord) ─────────
+    // Leest dezelfde sidecar als <image-slot>: .image-slots.state.json,
+    // gevuld op "Mascotte upload-bord.html". Sleutel: mascotte-<cat>-<pose>.
+    // Bestaat er een upload, dan tonen we die; anders de getekende Pluis.
+    let _uploadCache = null;
+    function laadUploads() {
+      if (_uploadCache) return _uploadCache;
+      _uploadCache = fetch(".image-slots.state.json")
+        .then((r) => (r.ok ? r.json() : {}))
+        .then((j) => j && typeof j === "object" ? j : {})
+        .catch(() => ({}));
+      return _uploadCache;
+    }
+    function PluisOrUpload({ categorie, pose, size }) {
+      const [url, setUrl] = useState(null);
+      useEffect(() => {
+        let levend = true;
+        laadUploads().then((map) => {
+          if (!levend) return;
+          const v = map["mascotte-" + categorie + "-" + pose];
+          const u = v && (typeof v === "string" ? v : v.u);
+          if (u && /^data:image\//i.test(u)) setUrl(u);
+          else setUrl(null);
+        });
+        return () => { levend = false; };
+      }, [categorie, pose]);
+      if (url) {
+        return (
+          <div style={{ width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <img src={url} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", display: "block" }} />
+          </div>
+        );
+      }
+      return <Mascotte categorie={categorie} pose={pose} size={size} />;
+    }
+
+    // ── Drijvende achtergrondvormen ─────────
+    function FloatShapes() {
+      const shapes = [
+        { left: 14,  top: 80,  size: 22, color: C.rood,  shape: "circle", r: -8 },
+        { left: 340, top: 130, size: 28, color: C.geel,  shape: "square", r: 18 },
+        { left: 20,  top: 520, size: 18, color: C.blauw, shape: "tri",    r: 12 },
+        { left: 360, top: 600, size: 24, color: C.groen, shape: "circle", r: 0 },
+        { left: 320, top: 360, size: 14, color: C.rood,  shape: "circle", r: 0 },
+        { left: 8,   top: 300, size: 20, color: C.geel,  shape: "square", r: -22 },
+      ];
+      return (
+        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+          {shapes.map((s, i) => {
+            const common = {
+              position: "absolute",
+              left: s.left, top: s.top,
+              width: s.size, height: s.size,
+              background: s.color,
+              border: "3px solid " + C.inkt,
+              "--r": s.r + "deg",
+              animation: `drift ${4 + (i % 3)}s ease-in-out infinite`,
+              animationDelay: `${i * 0.3}s`,
+            };
+            if (s.shape === "circle") return <div key={i} style={{ ...common, borderRadius: "50%" }} />;
+            if (s.shape === "square") return <div key={i} style={{ ...common, borderRadius: 6 }} />;
+            return <div key={i} style={{ ...common, background: "transparent", border: "none", width: 0, height: 0, borderLeft: s.size/2 + "px solid transparent", borderRight: s.size/2 + "px solid transparent", borderBottom: s.size + "px solid " + s.color }} />;
+          })}
+        </div>
+      );
+    }
+
+    // ── Voortgangsdots ─────────
+    function Progress({ step, total = 4 }) {
+      return (
+        <div style={{ display: "flex", gap: 8, justifyContent: "center", padding: "12px 0", position: "relative", zIndex: 2 }}>
+          {Array.from({ length: total }).map((_, i) => (
+            <div key={i} style={{
+              width: i === step ? 28 : 14,
+              height: 14,
+              borderRadius: 8,
+              border: "3px solid " + C.inkt,
+              background: i < step ? C.groen : i === step ? C.geel : "white",
+              transition: "all .3s ease",
+            }} />
+          ))}
+        </div>
+      );
+    }
+
+    // ── Optie-kaart ─────────
+    function OptionCard({ label, hint, color, onClick, rotate = 0, delay = 0 }) {
+      return (
+        <button
+          className="chunk"
+          onClick={onClick}
+          style={{
+            background: color,
+            padding: "22px 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 4,
+            width: "100%",
+            textAlign: "left",
+            transform: `rotate(${rotate}deg)`,
+            animation: `pop .5s ${delay}s both cubic-bezier(.5,1.6,.5,1)`,
+            fontFamily: "inherit",
+            color: C.inkt,
+          }}
+        >
+          <div className="display" style={{ fontSize: 28, lineHeight: 1 }}>{label}</div>
+        </button>
+      );
+    }
+
+    // ── Stap-vragen data ─────────
+    const STAPPEN = [
+      {
+        key: "leeftijd",
+        vraag: "Hoe oud ben je?",
+        opties: [
+          { val: "4-7",   label: "4 – 7 jaar",  hint: "kleuter & onderbouw",   color: C.rood,  icon: "🐣", rot: -1.5 },
+          { val: "7-10",  label: "7 – 10 jaar", hint: "middenbouw",            color: C.geel,  icon: "🦊", rot:  1.2 },
+          { val: "10-12", label: "10 – 12 jaar",hint: "bovenbouw",             color: C.blauw, icon: "🦉", rot: -0.8 },
+        ],
+      },
+      {
+        key: "duur",
+        vraag: "Hoe lang wil je doen?",
+        opties: [
+          { val: "kort",   label: "Half uurtje",  hint: "snel iets leuks",       color: C.geel,  icon: "⏱️", rot: -1.2 },
+          { val: "midden", label: "Een uurtje",   hint: "lekker even bezig",     color: C.groen, icon: "🕰️", rot:  1.4 },
+          { val: "lang",   label: "Halve dag",    hint: "écht ergens induiken",  color: C.blauw, icon: "🌅", rot: -0.6 },
+        ],
+      },
+      {
+        key: "plek",
+        vraag: "Binnen of buiten?",
+        opties: [
+          { val: "binnen", label: "Binnen", hint: "lekker warm en droog", color: C.paars, icon: "🏠", rot: -1.5 },
+          { val: "buiten", label: "Buiten", hint: "frisse neus halen",    color: C.groen, icon: "🌳", rot:  1.5 },
+        ],
+      },
+      {
+        key: "sociaal",
+        vraag: "Alleen of samen?",
+        opties: [
+          { val: "alleen", label: "In mijn eentje", hint: "lekker met mezelf",  color: C.rood,  icon: "🧒", rot: -1.2 },
+          { val: "samen",  label: "Samen",          hint: "met iemand erbij",   color: C.geel,  icon: "🧒🧒", rot:  1.4 },
+        ],
+      },
+    ];
+
+    // ── Startscherm (gelijk aan Startpagina.html) ─────────
+    function Start({ onStart }) {
+      const inkt = C.inkt, geel = C.geel, roze = "#F98FC0";
+      const lijn = { fill: "none", stroke: inkt, strokeWidth: 6, strokeLinecap: "round", strokeLinejoin: "round" };
+      const lijnDun = { ...lijn, strokeWidth: 5 };
+      const brauw = { ...lijn, strokeWidth: 6 };
+      return (
+        <div style={{ position: "absolute", inset: 0, background: roze, overflow: "hidden" }}>
+          {/* TITEL */}
+          <h1 style={{
+            position: "absolute", top: 84, left: 0, right: 0, textAlign: "center",
+            fontFamily: "Bricolage Grotesque", fontWeight: 800, color: inkt,
+            fontSize: 60, lineHeight: 0.92, letterSpacing: -2, margin: 0, padding: "0 24px", zIndex: 3,
+          }}>Help, ik<br />verveel me!</h1>
+
+          {/* MASCOTTE — nadenk-pose, onderkant weggesneden */}
+          <div style={{ position: "absolute", left: "50%", bottom: -6, transform: "translateX(-50%)", width: 452, zIndex: 1, animation: "adem 5s ease-in-out infinite" }}>
+            <svg viewBox="50 42 272 384" style={{ display: "block", width: "100%", height: "auto", overflow: "visible" }} role="img" aria-label="Pluis die nadenkt">
+              <path fill={geel} d="M 190 54 C 128 52, 90 96, 90 160 L 90 470 L 290 470 L 290 160 C 290 96, 252 52, 190 54 Z" />
+              <g>
+                <path style={lijn} d="M 108 196 C 78 206, 60 236, 66 268" />
+                <ellipse cx="64" cy="276" rx="11" ry="12" fill={inkt} />
+              </g>
+              <g>
+                <path style={lijn} d="M 270 200 C 296 210, 312 228, 306 248 C 300 270, 256 244, 224 220" />
+                <ellipse cx="214" cy="216" rx="12" ry="11" fill={inkt} />
+              </g>
+              <g>
+                <circle cx="163" cy="156" r="11" fill="#FCE7A6" />
+                <circle cx="203" cy="156" r="11" fill="#FCE7A6" />
+                <circle cx="167" cy="150" r="8.5" fill={inkt} />
+                <circle cx="207" cy="150" r="8.5" fill={inkt} />
+                <path style={brauw} d="M 150 132 Q 166 126 182 133" />
+                <path style={brauw} d="M 194 128 Q 210 116 226 124" />
+                <path style={lijnDun} d="M 172 184 Q 188 190 204 182" />
+              </g>
+            </svg>
+          </div>
+
+          {/* KNOP */}
+          <button className="cta-start" onClick={onStart} style={{
+            position: "absolute", left: 22, right: 22, bottom: 46, zIndex: 4, height: 72,
+            border: `4px solid ${inkt}`, borderRadius: 22, background: geel, color: inkt,
+            fontFamily: "Bricolage Grotesque", fontWeight: 800, fontSize: 25, letterSpacing: -0.4,
+            boxShadow: `0 7px 0 0 ${inkt}`, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+          }}>
+            Geef mij een idee! <span style={{ fontSize: 24 }}>→</span>
+          </button>
+        </div>
+      );
+    }
+
+    // ── Stapscherm ─────────
+    function StepScreen({ stapIdx, onPick, onBack }) {
+      const stap = STAPPEN[stapIdx];
+      return (
+        <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "48px 24px 28px", position: "relative" }}>
+          <FloatShapes />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 2 }}>
+            <button
+              onClick={onBack}
+              style={{
+                width: 44, height: 44, borderRadius: 14, border: "3px solid " + C.inkt,
+                background: "white", boxShadow: `3px 3px 0 ${C.inkt}`, fontFamily: "inherit",
+                fontSize: 22, fontWeight: 900, color: C.inkt, cursor: "pointer",
+              }}
+            >←</button>
+            <div style={{ fontWeight: 900, fontSize: 13, letterSpacing: 1.5, color: C.inkt, opacity: 0.6 }}>
+              STAP {stapIdx + 1} / 4
+            </div>
+            <div style={{ width: 44 }} />
+          </div>
+
+          <Progress step={stapIdx} />
+
+          <div className="display" style={{
+            fontSize: 32, lineHeight: 1.05, color: C.inkt, marginTop: 8, marginBottom: 22,
+            position: "relative", zIndex: 2, textWrap: "balance",
+          }}>
+            {stap.vraag}
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, position: "relative", zIndex: 2 }}>
+            {stap.opties.map((o, i) => (
+              <OptionCard
+                key={o.val}
+                label={o.label}
+                hint={o.hint}
+                color={o.color}
+                rotate={o.rot}
+                delay={i * 0.06}
+                onClick={() => onPick(stap.key, o.val)}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // ── Resultaat ─────────
+    function Resultaat({ idee, onAnder, onOpnieuw }) {
+      if (!idee) {
+        return (
+          <div style={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", padding: 28, textAlign: "center" }}>
+            <div className="display" style={{ fontSize: 32, color: C.rood }}>Hmm…</div>
+            <p style={{ fontWeight: 800, fontSize: 17, marginTop: 12 }}>
+              Voor deze combinatie hebben we nog geen idee. Probeer iets anders!
+            </p>
+            <button className="chunk" onClick={onOpnieuw} style={{ background: C.geel, padding: "18px 22px", fontSize: 20, fontFamily: "Bricolage Grotesque", fontWeight: 800, marginTop: 24 }}>
+              Opnieuw →
+            </button>
+          </div>
+        );
+      }
+      return (
+        <div style={{ height: "100%", display: "flex", flexDirection: "column", padding: "48px 24px 28px", position: "relative" }}>
+          <FloatShapes />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 2 }}>
+            <button
+              onClick={onOpnieuw}
+              style={{
+                padding: "10px 14px", borderRadius: 14, border: "3px solid " + C.inkt,
+                background: "white", boxShadow: `3px 3px 0 ${C.inkt}`, fontFamily: "inherit",
+                fontSize: 13, fontWeight: 900, color: C.inkt, cursor: "pointer", letterSpacing: 0.5,
+              }}
+            >↻ OPNIEUW</button>
+            <div style={{ fontWeight: 900, fontSize: 13, letterSpacing: 1.5, color: C.inkt, opacity: 0.6 }}>
+              JOUW IDEE
+            </div>
+            <div style={{ width: 88 }} />
+          </div>
+
+          <div style={{ position: "relative", zIndex: 2, marginTop: 6, flex: 1, display: "flex", flexDirection: "column", animation: "pop .55s cubic-bezier(.5,1.6,.5,1) both" }}>
+            <div style={{
+              background: "white",
+              border: "4px solid " + C.inkt,
+              borderRadius: 28,
+              boxShadow: `8px 8px 0 ${C.inkt}`,
+              padding: "16px 18px 22px",
+              display: "flex", flexDirection: "column", gap: 12,
+            }}>
+              <div style={{ alignSelf: "center", marginTop: -4 }}>
+                <PluisOrUpload categorie={idee.categorie} pose={["c", "d"][idee.id % 2]} size={220} />
+              </div>
+              <div style={{ alignSelf: "center", padding: "4px 12px", border: "2.5px solid " + C.inkt, borderRadius: 99, background: C.geel, fontWeight: 900, fontSize: 11, letterSpacing: 1.2, textTransform: "uppercase" }}>
+                {idee.categorie}
+              </div>
+              <div className="display" style={{ fontSize: 30, lineHeight: 1.05, color: C.inkt, textAlign: "center", textWrap: "balance" }}>
+                {idee.titel}
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.4, color: C.inkt, textAlign: "center", textWrap: "pretty", opacity: 0.85 }}>
+                {idee.uitleg}
+              </div>
+              {idee.spullen?.length > 0 && (
+                <div style={{ borderTop: "2.5px dashed " + C.inkt, paddingTop: 12, marginTop: 4 }}>
+                  <div style={{ fontSize: 11, fontWeight: 900, letterSpacing: 1.2, marginBottom: 6, opacity: 0.6 }}>WAT JE NODIG HEBT</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    {idee.spullen.map((s, i) => (
+                      <span key={i} style={{ padding: "5px 10px", background: C.cream, border: "2px solid " + C.inkt, borderRadius: 99, fontWeight: 800, fontSize: 12 }}>{s}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button className="chunk" onClick={onAnder} style={{
+            background: C.rood, padding: "18px 22px", fontSize: 22, fontFamily: "Bricolage Grotesque", fontWeight: 800,
+            color: "white", letterSpacing: 0.5, position: "relative", zIndex: 2, marginTop: 16,
+          }}>
+            Geef me een ander idee →
+          </button>
+        </div>
+      );
+    }
+
+    // ── App ─────────
+    function App() {
+      const [scherm, setScherm] = useState("start"); // start | step | result
+      const [stapIdx, setStapIdx] = useState(0);
+      const [keuzes, setKeuzes] = useState({});
+      const [idee, setIdee] = useState(null);
+
+      const pick = (key, val) => {
+        const nieuw = { ...keuzes, [key]: val };
+        setKeuzes(nieuw);
+        if (stapIdx < 3) {
+          setStapIdx(stapIdx + 1);
+        } else {
+          const gekozen = window.kiesIdee(nieuw, null);
+          setIdee(gekozen);
+          setScherm("result");
+        }
+      };
+
+      const back = () => {
+        if (stapIdx === 0) {
+          setScherm("start");
+        } else {
+          setStapIdx(stapIdx - 1);
+        }
+      };
+
+      const ander = () => {
+        const gekozen = window.kiesIdee(keuzes, idee?.id);
+        setIdee(gekozen);
+      };
+
+      const opnieuw = () => {
+        setKeuzes({});
+        setStapIdx(0);
+        setIdee(null);
+        setScherm("start");
+      };
+
+      if (scherm === "start")  return <Start onStart={() => { setStapIdx(0); setScherm("step"); }} />;
+      if (scherm === "step")   return <StepScreen stapIdx={stapIdx} onPick={pick} onBack={back} />;
+      return <Resultaat idee={idee} onAnder={ander} onOpnieuw={opnieuw} />;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+
+  <script>
+    // Schaal de telefoon-mockup zodat hij altijd in het venster past (desktop).
+    (function () {
+      var phone = document.querySelector(".phone");
+      var mq = window.matchMedia("(max-width: 440px)");
+      function fit() {
+        if (mq.matches) { phone.style.transform = "none"; return; }
+        var pad = 40;
+        var s = Math.min(1, (window.innerWidth - pad) / phone.offsetWidth, (window.innerHeight - pad) / phone.offsetHeight);
+        phone.style.transform = "scale(" + s + ")";
+      }
+      window.addEventListener("resize", fit);
+      if (mq.addEventListener) mq.addEventListener("change", fit);
+      fit();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+# Help! Ik verveel me! — op GitHub Pages zetten
+
+Deze map bevat de complete app. De mascottes zitten nu IN de app ingebakken,
+dus er zijn GEEN mappen of losse beeldbestanden meer. Je uploadt gewoon
+5 platte bestanden. Programmeren is niet nodig.
+
+## Wat zit erin (5 bestanden — geen mappen)
+- index.html .............. de app (open deze als hoofdpagina)
+- ideas.js ................ reservekopie van de activiteiten (vangnet)
+- sheet-data.js ........... haalt de activiteiten LIVE uit je Google Sheet
+- illustraties.jsx ........ kleuren + reserve-illustraties
+- mascotte.jsx ............ de mascotte "Pluis" (tekeningen zitten hierin)
+
+LET OP: upload alle 5 de bestanden, met exact dezelfde namen. Er zijn
+GEEN mappen nodig — dat was eerder de reden dat de mascottes niet
+zichtbaar waren.
+
+## Stap voor stap (zonder programmeerkennis)
+
+1. Maak een gratis account op https://github.com
+2. Klik rechtsboven op "+" -> "New repository".
+   - Repository name: bijvoorbeeld  verveel-generator
+   - Zet het op "Public"
+   - Klik "Create repository"
+3. Klik op "uploading an existing file" (of: Add file -> Upload files).
+4. Sleep de 5 bestanden uit deze map naar het venster:
+   index.html, ideas.js, sheet-data.js, illustraties.jsx, mascotte.jsx
+5. Klik onderaan op "Commit changes".
+6. Ga naar "Settings" (tabblad bovenaan) -> in het linkermenu "Pages".
+7. Onder "Build and deployment":
+   - Source: "Deploy from a branch"
+   - Branch: "main"  en map "/ (root)"  -> klik "Save".
+8. Wacht ~1 minuut en ververs de pagina. Bovenaan verschijnt je adres:
+   https://JOUWNAAM.github.io/verveel-generator/
+   Klaar! Deel die link.
+
+## Activiteiten aanpassen (voor iedereen)
+
+Dit blijft via je Google Sheet — je hoeft GitHub hier NIET voor te openen.
+Iemand past de Sheet aan, en de app toont het bij de volgende keer openen.
+GitHub heb je alleen nodig als je de app zelf wilt veranderen.
+
+## Eigen domeinnaam (optioneel)
+
+Settings -> Pages -> "Custom domain": vul je domein in en volg de stappen.
+
+## Even checken na het live zetten
+
+Open je live link en klik "Geef mij een idee" en loop de keuzes door:
+er hoort een activiteit MET een gekleurde mascotte te verschijnen.
+Zie je de mascotte? Dan staat alles goed.
