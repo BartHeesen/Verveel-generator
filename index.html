@@ -58,7 +58,7 @@
   /* Telefoon: edge-to-edge, geen bezel */
   @media (max-width: 440px) {
     body { background-image: none; }
-    .phone { padding: 0; border-radius: 0; box-shadow: none; transform: none !important; }
+    .phone { padding: 0; border-radius: 0; box-shadow: none; }
     .phone::before, .phone::after { display: none; }
     .screen { border-radius: 0; }
     .island { display: none; }
@@ -514,8 +514,7 @@
       var phone = document.querySelector(".phone");
       var mq = window.matchMedia("(max-width: 440px)");
       function fit() {
-        if (mq.matches) { phone.style.transform = "none"; return; }
-        var pad = 40;
+        var pad = mq.matches ? 0 : 40;
         var s = Math.min(1, (window.innerWidth - pad) / phone.offsetWidth, (window.innerHeight - pad) / phone.offsetHeight);
         phone.style.transform = "scale(" + s + ")";
       }
