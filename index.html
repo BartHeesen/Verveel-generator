@@ -152,7 +152,7 @@
         .catch(() => ({}));
       return _uploadCache;
     }
-    function PluisOrUpload({ categorie, pose, size }) {
+    function PluisOrUpload({ categorie, pose, size, fill }) {
       const [url, setUrl] = useState(null);
       useEffect(() => {
         let levend = true;
@@ -165,14 +165,17 @@
         });
         return () => { levend = false; };
       }, [categorie, pose]);
+      const box = fill
+        ? { width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }
+        : { width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center" };
       if (url) {
         return (
-          <div style={{ width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={box}>
             <img src={url} alt="" style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain", display: "block" }} />
           </div>
         );
       }
-      return <Mascotte categorie={categorie} pose={pose} size={size} />;
+      return <Mascotte categorie={categorie} pose={pose} size={size} style={fill ? { width: "100%", height: "100%" } : undefined} />;
     }
 
     // ── Drijvende achtergrondvormen ─────────
@@ -423,22 +426,24 @@
             <div style={{ width: 88 }} />
           </div>
 
-          <div style={{ position: "relative", zIndex: 2, marginTop: 6, flex: 1, minHeight: 0, overflow: "hidden", display: "flex", flexDirection: "column", animation: "pop .55s cubic-bezier(.5,1.6,.5,1) both" }}>
+          <div style={{ position: "relative", zIndex: 2, marginTop: 6, flex: 1, minHeight: 0, overflow: "hidden", display: "flex", flexDirection: "column" }}>
             <div style={{
               background: "white",
               border: "4px solid " + C.inkt,
               borderRadius: 28,
               boxShadow: `8px 8px 0 ${C.inkt}`,
-              padding: "16px 18px 22px",
-              display: "flex", flexDirection: "column", gap: 12,
+              padding: "14px 18px 18px",
+              display: "flex", flexDirection: "column", gap: 10,
+              height: "100%", minHeight: 0, overflow: "hidden",
             }}>
-              <div style={{ alignSelf: "center", marginTop: -4 }}>
-                <PluisOrUpload categorie={idee.categorie} pose={["c", "d"][idee.id % 2]} size={180} />
+              <div style={{ flex: "1 1 0", minHeight: 64, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                <PluisOrUpload categorie={idee.categorie} pose={["c", "d"][idee.id % 2]} fill />
               </div>
+              <div style={{ flex: "0 1 auto", minHeight: 0, overflow: "auto", display: "flex", flexDirection: "column", gap: 10 }}>
               <div style={{ alignSelf: "center", padding: "4px 12px", border: "2.5px solid " + C.inkt, borderRadius: 99, background: C.geel, fontWeight: 900, fontSize: 11, letterSpacing: 1.2, textTransform: "uppercase" }}>
                 {idee.categorie}
               </div>
-              <div className="display" style={{ fontSize: 30, lineHeight: 1.05, color: C.inkt, textAlign: "center", textWrap: "balance" }}>
+              <div className="display" style={{ fontSize: 28, lineHeight: 1.05, color: C.inkt, textAlign: "center", textWrap: "balance" }}>
                 {idee.titel}
               </div>
               <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.4, color: C.inkt, textAlign: "center", textWrap: "pretty", opacity: 0.85 }}>
@@ -454,6 +459,7 @@
                   </div>
                 </div>
               )}
+              </div>
             </div>
           </div>
 
